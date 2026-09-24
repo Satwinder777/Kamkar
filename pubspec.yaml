@@ -1,0 +1,62 @@
+name: kamkar
+description: "Kamkar - Premium On-Demand Workforce Marketplace & Service Hub"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI Icons
+  cupertino_icons: ^1.0.8
+
+  # State Management & Routing
+  get: ^4.6.6
+
+  # Networking & Realtime
+  dio: ^5.7.0
+  signalr_netcore: ^1.3.9
+
+  # Local & Secure Storage
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.2
+
+  # Typography & Design
+  google_fonts: ^6.2.1
+
+  # Animations & Visual Polish
+  flutter_animate: ^4.5.0
+  lottie: ^3.1.3
+  shimmer: ^3.0.0
+
+  # Navigation & Walkthrough
+  google_nav_bar: ^5.0.7
+  showcaseview: ^3.0.0
+
+  # Images & Media
+  cached_network_image: ^3.4.1
+  flutter_svg: ^2.0.10+1
+  image_picker: ^1.1.2
+
+  # Charts & Data Visualization
+  fl_chart: ^0.69.0
+
+  # Inputs & OTP
+  pinput: ^5.0.1
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/images/

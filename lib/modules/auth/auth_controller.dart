@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/storage/secure_storage_service.dart';
 import '../../data/repositories/auth_repository.dart';
 
 class AuthController extends GetxController {
@@ -18,8 +19,8 @@ class AuthController extends GetxController {
   Timer? _resendTimer;
 
   // Controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(text: "@kamkar.com");
+  final passwordController = TextEditingController(text: "Password123!");
   final fullNameController = TextEditingController();
   final phoneController = TextEditingController();
   final otpController = TextEditingController();
@@ -158,6 +159,9 @@ class AuthController extends GetxController {
   }
 
   void _navigatePostAuth(String role, String verificationStatus) {
+    if (Get.isRegistered<SecureStorageService>()) {
+      Get.find<SecureStorageService>().setOnboardingCompleted(true);
+    }
     if (role == AppConstants.roleWorker && verificationStatus == 'Pending') {
       Get.offAllNamed(AppRoutes.workerPendingApproval);
     } else {

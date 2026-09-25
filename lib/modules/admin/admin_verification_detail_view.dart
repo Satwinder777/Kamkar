@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/confirmation_bottom_sheet.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../data/models/admin_model.dart';
 import 'admin_controller.dart';
@@ -86,9 +87,29 @@ class AdminVerificationDetailView extends StatelessWidget {
                     child: CustomButton(
                       text: 'Reject',
                       backgroundColor: AppColors.error,
-                      onPressed: () {
-                        controller.rejectWorker(req.workerId, 'Incomplete documentation');
-                        Get.back();
+                      onPressed: () async {
+                        final confirmed = await ConfirmationBottomSheet.show(
+                          context: context,
+                          title: 'Reject Application?',
+                          message: 'Are you sure you want to reject ${req.fullName}\'s verification application?',
+                          confirmText: 'Reject Application',
+                          cancelText: 'Cancel',
+                          icon: Icons.block_rounded,
+                          iconColor: AppColors.error,
+                          confirmButtonColor: AppColors.error,
+                          isDestructive: true,
+                          cancellationReasons: const [
+                            'Incomplete or unreadable ID documentation',
+                            'Expired trade certificate / license',
+                            'Experience does not match claims',
+                            'Failed background verification check',
+                            'Other administrative reason',
+                          ],
+                        );
+                        if (confirmed == true) {
+                          controller.rejectWorker(req.workerId, 'Application rejected by administrator');
+                          Get.back();
+                        }
                       },
                     ),
                   ),
@@ -97,9 +118,22 @@ class AdminVerificationDetailView extends StatelessWidget {
                     child: CustomButton(
                       text: 'Approve',
                       gradient: AppColors.emeraldGradient,
-                      onPressed: () {
-                        controller.approveWorker(req.workerId);
-                        Get.back();
+                      onPressed: () async {
+                        final confirmed = await ConfirmationBottomSheet.show(
+                          context: context,
+                          title: 'Approve Application?',
+                          message: 'Verify ${req.fullName} as an official ${req.workerType}? They will immediately receive access to accept customer jobs.',
+                          confirmText: 'Approve & Activate',
+                          cancelText: 'Review Later',
+                          icon: Icons.verified_user_rounded,
+                          iconColor: AppColors.success,
+                          confirmButtonColor: AppColors.success,
+                          isDestructive: false,
+                        );
+                        if (confirmed == true) {
+                          controller.approveWorker(req.workerId);
+                          Get.back();
+                        }
                       },
                     ),
                   ),

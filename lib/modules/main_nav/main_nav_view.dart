@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../core/widgets/floating_nav_bar.dart';
 import '../admin/admin_verification_list_view.dart';
 import '../booking/booking_list_view.dart';
@@ -10,6 +9,7 @@ import '../customer/customer_profile_view.dart';
 import '../marketplace/explore_view.dart';
 import '../settings/user_settings_view.dart';
 import '../worker/worker_dashboard_view.dart';
+import '../worker/worker_profile_view.dart';
 import 'main_nav_controller.dart';
 
 class MainNavView extends GetView<MainNavController> {
@@ -37,12 +37,12 @@ class MainNavView extends GetView<MainNavController> {
       const CustomerProfileView(),
     ];
 
-    final tabs = const [
-      GButton(icon: Icons.explore_rounded, text: 'Explore'),
-      GButton(icon: Icons.dashboard_rounded, text: 'Hub'),
-      GButton(icon: Icons.calendar_today_rounded, text: 'Bookings'),
-      GButton(icon: Icons.chat_bubble_rounded, text: 'Chats'),
-      GButton(icon: Icons.person_rounded, text: 'Profile'),
+    const items = [
+      NavItem(icon: Icons.explore_outlined, activeIcon: Icons.explore_rounded, label: 'Explore'),
+      NavItem(icon: Icons.grid_view_outlined, activeIcon: Icons.grid_view_rounded, label: 'Hub'),
+      NavItem(icon: Icons.calendar_today_outlined, activeIcon: Icons.calendar_month_rounded, label: 'Bookings'),
+      NavItem(icon: Icons.chat_bubble_outline_rounded, activeIcon: Icons.chat_bubble_rounded, label: 'Chats'),
+      NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
     ];
 
     return Scaffold(
@@ -53,7 +53,7 @@ class MainNavView extends GetView<MainNavController> {
       bottomNavigationBar: FloatingNavBar(
         selectedIndex: controller.currentIndex.value,
         onTabChange: controller.changeTab,
-        tabs: tabs,
+        items: items,
       ),
     );
   }
@@ -63,14 +63,14 @@ class MainNavView extends GetView<MainNavController> {
       const WorkerDashboardView(),
       const BookingListView(),
       const ConversationListView(),
-      const UserSettingsView(),
+      const WorkerProfileView(),
     ];
 
-    final tabs = const [
-      GButton(icon: Icons.speed_rounded, text: 'Hub'),
-      GButton(icon: Icons.assignment_rounded, text: 'Jobs'),
-      GButton(icon: Icons.chat_bubble_rounded, text: 'Chats'),
-      GButton(icon: Icons.settings_rounded, text: 'Settings'),
+    const items = [
+      NavItem(icon: Icons.speed_outlined, activeIcon: Icons.speed_rounded, label: 'Hub'),
+      NavItem(icon: Icons.assignment_outlined, activeIcon: Icons.assignment_rounded, label: 'Jobs'),
+      NavItem(icon: Icons.chat_bubble_outline_rounded, activeIcon: Icons.chat_bubble_rounded, label: 'Chats'),
+      NavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
     ];
 
     return Scaffold(
@@ -81,7 +81,7 @@ class MainNavView extends GetView<MainNavController> {
       bottomNavigationBar: FloatingNavBar(
         selectedIndex: controller.currentIndex.value.clamp(0, pages.length - 1),
         onTabChange: controller.changeTab,
-        tabs: tabs,
+        items: items,
       ),
     );
   }
@@ -93,10 +93,10 @@ class MainNavView extends GetView<MainNavController> {
       const UserSettingsView(),
     ];
 
-    final tabs = const [
-      GButton(icon: Icons.verified_user_rounded, text: 'Queue'),
-      GButton(icon: Icons.explore_rounded, text: 'Directory'),
-      GButton(icon: Icons.settings_rounded, text: 'Settings'),
+    const items = [
+      NavItem(icon: Icons.verified_user_outlined, activeIcon: Icons.verified_user_rounded, label: 'Queue'),
+      NavItem(icon: Icons.explore_outlined, activeIcon: Icons.explore_rounded, label: 'Directory'),
+      NavItem(icon: Icons.settings_outlined, activeIcon: Icons.settings_rounded, label: 'Settings'),
     ];
 
     return Scaffold(
@@ -107,8 +107,9 @@ class MainNavView extends GetView<MainNavController> {
       bottomNavigationBar: FloatingNavBar(
         selectedIndex: controller.currentIndex.value.clamp(0, pages.length - 1),
         onTabChange: controller.changeTab,
-        tabs: tabs,
+        items: items,
       ),
     );
   }
 }
+

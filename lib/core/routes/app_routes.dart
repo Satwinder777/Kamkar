@@ -15,11 +15,13 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String customerDashboard = '/customer-dashboard';
   static const String customerProfile = '/customer-profile';
+  static const String workerProfile = '/worker-profile';
   static const String workerDashboard = '/worker-dashboard';
   static const String workerOnboarding = '/worker-onboarding';
   static const String workerPendingApproval = '/worker-pending-approval';
   static const String createReview = '/create-review';
   static const String settings = '/settings';
+  static const String helpSupport = '/help-support';
   static const String adminVerifications = '/admin-verifications';
   static const String adminVerificationDetail = '/admin-verification-detail';
 }

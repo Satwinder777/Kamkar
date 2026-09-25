@@ -18,15 +18,19 @@ class AppNotification {
   });
 
   factory AppNotification.fromJson(Map<String, dynamic> json) {
+    final msg = json['body']?.toString() ?? json['message']?.toString() ?? '';
+    final timeRaw = json['createdAtUtc'] ?? json['createdAt'];
+    final tId = json['relatedEntityId']?.toString() ?? json['targetId']?.toString() ?? json['linkUrl']?.toString();
+
     return AppNotification(
-      id: json['id']?.toString() ?? '',
+      id: json['notificationId']?.toString() ?? json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? 'Notification',
-      message: json['message']?.toString() ?? '',
+      message: msg,
       type: json['type']?.toString() ?? 'System',
-      targetId: json['targetId']?.toString(),
+      targetId: tId,
       isRead: json['isRead'] == true,
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+      createdAt: timeRaw != null
+          ? DateTime.tryParse(timeRaw.toString()) ?? DateTime.now()
           : DateTime.now(),
     );
   }

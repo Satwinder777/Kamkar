@@ -59,12 +59,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Kamkar requires camera access to capture verification documents and trade certificates.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Kamkar requires photo library access to upload verification documents and profile photos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Kamkar uses your location to discover nearby verified trades professionals.</string>
 </dict>
 </plist>

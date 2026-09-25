@@ -18,16 +18,28 @@ class AdminRemoteDataSource {
     return [];
   }
 
-  Future<void> submitVerificationDecision({
-    required String workerId,
-    required bool isApproved,
-    String? rejectionReason,
+  Future<void> approveVerification({
+    required String requestType,
+    required String id,
+    String? notes,
   }) async {
     await apiClient.post(
-      '${ApiConstants.adminVerificationDecision}/$workerId/decision',
+      '${ApiConstants.adminVerifications}/$requestType/$id/approve',
       data: {
-        'isApproved': isApproved,
-        'rejectionReason': rejectionReason,
+        'notes': notes ?? 'Approved by administrator',
+      },
+    );
+  }
+
+  Future<void> rejectVerification({
+    required String requestType,
+    required String id,
+    String? notes,
+  }) async {
+    await apiClient.post(
+      '${ApiConstants.adminVerifications}/$requestType/$id/reject',
+      data: {
+        'notes': notes ?? 'Rejected by administrator',
       },
     );
   }

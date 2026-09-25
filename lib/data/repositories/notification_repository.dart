@@ -19,9 +19,22 @@ class NotificationRepository {
       return List<AppNotification>.from(MockDataProvider.mockNotifications);
     }
     try {
-      return await remoteDataSource.getNotifications();
+      final list = await remoteDataSource.getNotifications();
+      if (list.isNotEmpty) return list;
+      return List<AppNotification>.from(MockDataProvider.mockNotifications);
     } catch (_) {
       return List<AppNotification>.from(MockDataProvider.mockNotifications);
+    }
+  }
+
+  Future<int> getUnreadCount() async {
+    if (AppConfig.isMockMode) {
+      return MockDataProvider.mockNotifications.where((n) => !n.isRead).length;
+    }
+    try {
+      return await remoteDataSource.getUnreadCount();
+    } catch (_) {
+      return MockDataProvider.mockNotifications.where((n) => !n.isRead).length;
     }
   }
 
@@ -44,6 +57,27 @@ class NotificationRepository {
     }
     try {
       await remoteDataSource.markAsRead(notificationId);
+    } catch (_) {}
+  }
+
+  Future<void> markAllAsRead() async {
+    if (AppConfig.isMockMode) {
+      for (int i = 0; i < MockDataProvider.mockNotifications.length; i++) {
+        final n = MockDataProvider.mockNotifications[i];
+        MockDataProvider.mockNotifications[i] = AppNotification(
+          id: n.id,
+          title: n.title,
+          message: n.message,
+          type: n.type,
+          createdAt: n.createdAt,
+          isRead: true,
+          targetId: n.targetId,
+        );
+      }
+      return;
+    }
+    try {
+      await remoteDataSource.markAllAsRead();
     } catch (_) {}
   }
 

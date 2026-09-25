@@ -20,15 +20,34 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    String roleStr = 'Customer';
+    if (json['role'] != null) {
+      roleStr = json['role'].toString();
+    } else if (json['roles'] is List && (json['roles'] as List).isNotEmpty) {
+      roleStr = (json['roles'] as List).first.toString();
+    } else if (json['accountType'] != null) {
+      roleStr = json['accountType'].toString();
+    }
+
+    String name = json['fullName']?.toString() ?? '';
+    if (name.isEmpty) {
+      final fName = json['firstName']?.toString() ?? '';
+      final lName = json['lastName']?.toString() ?? '';
+      name = '$fName $lName'.trim();
+      if (name.isEmpty) {
+        name = json['displayName']?.toString() ?? json['email']?.toString().split('@').first ?? 'User';
+      }
+    }
+
     return UserModel(
-      id: json['id']?.toString() ?? '',
+      id: json['id']?.toString() ?? json['userId']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
-      fullName: json['fullName']?.toString() ?? '',
-      phoneNumber: json['phoneNumber']?.toString(),
-      role: json['role']?.toString() ?? 'Customer',
+      fullName: name,
+      phoneNumber: json['phoneNumber']?.toString() ?? json['phone']?.toString(),
+      role: roleStr,
       isProfileComplete: json['isProfileComplete'] == true,
-      verificationStatus: json['verificationStatus']?.toString() ?? 'Pending',
-      profileImageUrl: json['profileImageUrl']?.toString(),
+      verificationStatus: json['verificationStatus']?.toString() ?? 'Approved',
+      profileImageUrl: json['profileImageUrl']?.toString() ?? json['profilePhotoUrl']?.toString(),
     );
   }
 
@@ -60,11 +79,21 @@ class AuthResponse {
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
+    UserModel parsedUser;
+    if (json['user'] is Map<String, dynamic>) {
+      parsedUser = UserModel.fromJson(json['user'] as Map<String, dynamic>);
+    } else {
+      parsedUser = UserModel.fromJson(json);
+    }
+
+    final expRaw = json['expiresAtUtc'] ?? json['expiresAt'];
+    final exp = expRaw != null ? DateTime.tryParse(expRaw.toString()) : null;
+
     return AuthResponse(
       accessToken: json['accessToken']?.toString() ?? '',
       refreshToken: json['refreshToken']?.toString() ?? '',
-      expiresAt: json['expiresAt'] != null ? DateTime.tryParse(json['expiresAt']) : null,
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>? ?? {}),
+      expiresAt: exp,
+      user: parsedUser,
     );
   }
 }

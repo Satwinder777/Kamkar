@@ -66,4 +66,23 @@ class MarketplaceRemoteDataSource {
     final response = await apiClient.get('${ApiConstants.workerDetail}/$workerId');
     return WorkerProfile.fromJson(response as Map<String, dynamic>);
   }
+
+  Future<WorkerProfile> getWorkerMe() async {
+    final response = await apiClient.get(ApiConstants.workerMe);
+    return WorkerProfile.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<void> updateWorkerAvailability({
+    required bool isAvailable,
+    String? notes,
+  }) async {
+    await apiClient.post(
+      ApiConstants.workerAvailability,
+      data: {
+        'kind': isAvailable ? 'Available' : 'Unavailable',
+        'isRecurring': true,
+        'notes': notes ?? (isAvailable ? 'Active for bookings' : 'Offline'),
+      },
+    );
+  }
 }

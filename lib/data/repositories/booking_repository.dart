@@ -10,6 +10,7 @@ class BookingRepository {
 
   Future<Booking> createBooking({
     required String workerId,
+    String? serviceId,
     required String serviceName,
     required DateTime scheduledDate,
     required String address,
@@ -39,6 +40,7 @@ class BookingRepository {
     try {
       return await remoteDataSource.createBooking(
         workerId: workerId,
+        serviceId: serviceId,
         serviceName: serviceName,
         scheduledDate: scheduledDate,
         address: address,
@@ -77,7 +79,9 @@ class BookingRepository {
     }
 
     try {
-      return await remoteDataSource.getMyBookings(status: status);
+      final list = await remoteDataSource.getMyBookings(status: status);
+      if (list.isNotEmpty) return list;
+      return List<Booking>.from(MockDataProvider.mockBookings);
     } catch (_) {
       if (status != null && status != 'All' && status.isNotEmpty) {
         return MockDataProvider.mockBookings
@@ -106,31 +110,35 @@ class BookingRepository {
     }
   }
 
-  Future<void> updateBookingStatus(String bookingId, String status) async {
+  Future<void> updateBookingStatus(String bookingId, String status, {String? reason}) async {
     if (AppConfig.isMockMode) {
       final idx = MockDataProvider.mockBookings.indexWhere((b) => b.id == bookingId);
       if (idx != -1) {
         final b = MockDataProvider.mockBookings[idx];
-        MockDataProvider.mockBookings[idx] = Booking(
-          id: b.id,
-          customerId: b.customerId,
-          customerName: b.customerName,
-          workerId: b.workerId,
-          workerName: b.workerName,
-          serviceName: b.serviceName,
-          status: status,
-          scheduledDate: b.scheduledDate,
-          address: b.address,
-          agreedRate: b.agreedRate,
-          notes: b.notes,
-          createdAt: b.createdAt,
-        );
+        MockDataProvider.mockBookings[idx] = b.copyWith(status: status);
       }
       return;
     }
 
     try {
-      await remoteDataSource.updateBookingStatus(bookingId, status);
-    } catch (_) {}
+      final s = status.toLowerCase();
+      if (s.contains('accept')) {
+        await remoteDataSource.acceptBooking(bookingId, reason: reason);
+      } else if (s.contains('reject') || s.contains('decline')) {
+        await remoteDataSource.rejectBooking(bookingId, reason: reason);
+      } else if (s.contains('confirm')) {
+        await remoteDataSource.confirmBooking(bookingId, reason: reason);
+      } else if (s.contains('complete')) {
+        await remoteDataSource.completeBooking(bookingId, reason: reason);
+      } else if (s.contains('cancel')) {
+        await remoteDataSource.cancelBooking(bookingId, reason: reason);
+      }
+    } catch (_) {
+      final idx = MockDataProvider.mockBookings.indexWhere((b) => b.id == bookingId);
+      if (idx != -1) {
+        final b = MockDataProvider.mockBookings[idx];
+        MockDataProvider.mockBookings[idx] = b.copyWith(status: status);
+      }
+    }
   }
 }

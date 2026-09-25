@@ -14,14 +14,19 @@ class AuthRemoteDataSource {
     String? phoneNumber,
     required String role,
   }) async {
+    final names = fullName.trim().split(' ');
+    final firstName = names.isNotEmpty ? names.first : 'User';
+    final lastName = names.length > 1 ? names.sublist(1).join(' ') : '';
+
     final response = await apiClient.post(
       ApiConstants.register,
       data: {
         'email': email,
         'password': password,
-        'fullName': fullName,
-        'phoneNumber': phoneNumber,
-        'role': role,
+        'firstName': firstName,
+        'lastName': lastName,
+        'phone': phoneNumber ?? '',
+        'accountType': role,
       },
     );
     return response is Map<String, dynamic> ? response : {};
@@ -68,6 +73,11 @@ class AuthRemoteDataSource {
       data: {'idToken': idToken},
     );
     return AuthResponse.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<Map<String, dynamic>> getOnboardingStatus() async {
+    final response = await apiClient.get(ApiConstants.onboardingStatus);
+    return response is Map<String, dynamic> ? response : {};
   }
 
   Future<void> logout() async {

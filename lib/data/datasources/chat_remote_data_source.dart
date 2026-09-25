@@ -15,10 +15,17 @@ class ChatRemoteDataSource {
     return [];
   }
 
+  Future<NegotiationThread> openThread(String workerProfileId) async {
+    final response = await apiClient.post(
+      ApiConstants.threads,
+      data: {'workerProfileId': workerProfileId},
+    );
+    return NegotiationThread.fromJson(response as Map<String, dynamic>);
+  }
+
   Future<List<ChatMessage>> getMessages(String threadId) async {
     final response = await apiClient.get(
-      ApiConstants.messages,
-      queryParameters: {'threadId': threadId},
+      '${ApiConstants.threads}/$threadId/messages',
     );
     if (response is List) {
       return response.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>)).toList();
@@ -32,26 +39,11 @@ class ChatRemoteDataSource {
     double? proposedRate,
   }) async {
     final response = await apiClient.post(
-      ApiConstants.messages,
+      '${ApiConstants.threads}/$threadId/messages',
       data: {
-        'threadId': threadId,
-        'message': message,
-        'proposedRate': proposedRate,
+        'body': message,
       },
     );
     return ChatMessage.fromJson(response as Map<String, dynamic>);
-  }
-
-  Future<void> proposeOffer({
-    required String threadId,
-    required double offeredRate,
-  }) async {
-    await apiClient.post(
-      ApiConstants.proposeOffer,
-      data: {
-        'threadId': threadId,
-        'offeredRate': offeredRate,
-      },
-    );
   }
 }

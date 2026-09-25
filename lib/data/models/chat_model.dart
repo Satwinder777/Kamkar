@@ -22,32 +22,42 @@ class ChatMessage {
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json, {String? currentUserId}) {
-    final sender = json['senderId']?.toString() ?? '';
+    final sender = json['senderUserId']?.toString() ?? json['senderId']?.toString() ?? '';
+    final msg = json['body']?.toString() ?? json['message']?.toString() ?? '';
+    final timeRaw = json['createdAtUtc'] ?? json['createdAt'];
+    final isMineFlag = json['mine'] == true || json['isMine'] == true;
+
     return ChatMessage(
-      id: json['id']?.toString() ?? '',
+      id: json['messageId']?.toString() ?? json['id']?.toString() ?? '',
       threadId: json['threadId']?.toString() ?? '',
       senderId: sender,
-      senderName: json['senderName']?.toString() ?? 'User',
-      message: json['message']?.toString() ?? '',
+      senderName: json['senderName']?.toString() ?? (isMineFlag ? 'You' : 'Participant'),
+      message: msg,
       proposedRate: (json['proposedRate'] as num?)?.toDouble(),
       rateStatus: json['rateStatus']?.toString(),
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt']) ?? DateTime.now()
+      createdAt: timeRaw != null
+          ? DateTime.tryParse(timeRaw.toString()) ?? DateTime.now()
           : DateTime.now(),
-      isMine: currentUserId != null ? sender == currentUserId : (json['isMine'] == true),
+      isMine: currentUserId != null ? sender == currentUserId : isMineFlag,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'messageId': id,
       'threadId': threadId,
+      'senderUserId': senderId,
       'senderId': senderId,
       'senderName': senderName,
+      'body': message,
       'message': message,
       'proposedRate': proposedRate,
       'rateStatus': rateStatus,
+      'createdAtUtc': createdAt.toIso8601String(),
       'createdAt': createdAt.toIso8601String(),
+      'mine': isMine,
+      'isMine': isMine,
     };
   }
 }
@@ -80,20 +90,28 @@ class NegotiationThread {
   });
 
   factory NegotiationThread.fromJson(Map<String, dynamic> json) {
+    final tId = json['threadId']?.toString() ?? json['id']?.toString() ?? '';
+    final wId = json['workerProfileId']?.toString() ?? json['workerId']?.toString() ?? '';
+    final cId = json['customerUserId']?.toString() ?? json['customerId']?.toString() ?? '';
+    final name = json['workerName']?.toString() ?? json['customerName']?.toString() ?? 'Conversation';
+    final photo = json['workerPhotoUrl']?.toString() ?? json['workerImageUrl']?.toString();
+    final price = (json['currentPrice'] ?? json['currentOfferedRate']) as num?;
+    final timeRaw = json['lastMessageAtUtc'] ?? json['updatedAt'];
+
     return NegotiationThread(
-      id: json['id']?.toString() ?? '',
-      customerId: json['customerId']?.toString() ?? '',
+      id: tId,
+      customerId: cId,
       customerName: json['customerName']?.toString() ?? 'Customer',
-      workerId: json['workerId']?.toString() ?? '',
-      workerName: json['workerName']?.toString() ?? 'Worker',
-      workerImageUrl: json['workerImageUrl']?.toString(),
-      serviceName: json['serviceName']?.toString() ?? 'Service Consultation',
-      currentOfferedRate: (json['currentOfferedRate'] as num?)?.toDouble() ?? 0.0,
-      lastMessage: json['lastMessage']?.toString(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.tryParse(json['updatedAt']) ?? DateTime.now()
+      workerId: wId,
+      workerName: name,
+      workerImageUrl: photo,
+      serviceName: json['serviceName']?.toString() ?? 'Trade Service Negotiation',
+      currentOfferedRate: price?.toDouble() ?? 45.0,
+      lastMessage: json['lastMessage']?.toString() ?? 'Consultation active',
+      updatedAt: timeRaw != null
+          ? DateTime.tryParse(timeRaw.toString()) ?? DateTime.now()
           : DateTime.now(),
-      unreadCount: json['unreadCount'] is int ? json['unreadCount'] : 0,
+      unreadCount: (json['unreadCount'] as num?)?.toInt() ?? 0,
     );
   }
 }

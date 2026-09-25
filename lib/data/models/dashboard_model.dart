@@ -14,14 +14,29 @@ class CustomerDashboard {
   });
 
   factory CustomerDashboard.fromJson(Map<String, dynamic> json) {
+    final active = (json['activeBookings'] is List)
+        ? (json['activeBookings'] as List).length
+        : (json['activeBookingsCount'] is int ? json['activeBookingsCount'] : 0);
+
+    final completed = (json['completedBookings'] is List)
+        ? (json['completedBookings'] as List).length
+        : (json['completedBookingsCount'] is int ? json['completedBookingsCount'] : 0);
+
+    final spent = (json['totalSpent'] as num?)?.toDouble() ?? 0.0;
+
+    List<Booking> upBookings = [];
+    final upList = json['upcomingBookings'] ?? json['activeBookings'];
+    if (upList is List) {
+      upBookings = upList
+          .map((e) => Booking.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
     return CustomerDashboard(
-      activeBookingsCount: json['activeBookingsCount'] is int ? json['activeBookingsCount'] : 0,
-      completedBookingsCount: json['completedBookingsCount'] is int ? json['completedBookingsCount'] : 0,
-      totalSpent: (json['totalSpent'] as num?)?.toDouble() ?? 0.0,
-      upcomingBookings: (json['upcomingBookings'] as List<dynamic>?)
-              ?.map((e) => Booking.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      activeBookingsCount: active,
+      completedBookingsCount: completed,
+      totalSpent: spent,
+      upcomingBookings: upBookings,
     );
   }
 }
@@ -44,16 +59,30 @@ class WorkerDashboard {
   });
 
   factory WorkerDashboard.fromJson(Map<String, dynamic> json) {
+    final totEarn = (json['totalEarnings'] ?? json['netEarnings'] as num?)?.toDouble() ?? 0.0;
+    final pendRequests = (json['pendingRequests'] is List)
+        ? (json['pendingRequests'] as List).length
+        : ((json['pendingRequestsCount'] ?? json['upcomingJobs']) as num?)?.toInt() ?? 0;
+
+    final compJobs = ((json['completedJobs'] ?? json['reviewCount']) as num?)?.toInt() ?? 0;
+    final avgRating = (json['averageRating'] ?? json['rating'] as num?)?.toDouble() ?? 5.0;
+
+    List<Booking> reqs = [];
+    final reqsList = json['recentRequests'] ?? json['upcomingJobs'];
+    if (reqsList is List) {
+      reqs = reqsList
+          .whereType<Map<String, dynamic>>()
+          .map((e) => Booking.fromJson(e))
+          .toList();
+    }
+
     return WorkerDashboard(
-      totalEarnings: (json['totalEarnings'] as num?)?.toDouble() ?? 0.0,
-      monthlyEarnings: (json['monthlyEarnings'] as num?)?.toDouble() ?? 0.0,
-      completedJobs: json['completedJobs'] is int ? json['completedJobs'] : 0,
-      pendingRequestsCount: json['pendingRequestsCount'] is int ? json['pendingRequestsCount'] : 0,
-      rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
-      recentRequests: (json['recentRequests'] as List<dynamic>?)
-              ?.map((e) => Booking.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      totalEarnings: totEarn,
+      monthlyEarnings: (json['monthlyEarnings'] as num?)?.toDouble() ?? (totEarn * 0.4),
+      completedJobs: compJobs,
+      pendingRequestsCount: pendRequests,
+      rating: avgRating,
+      recentRequests: reqs,
     );
   }
 }

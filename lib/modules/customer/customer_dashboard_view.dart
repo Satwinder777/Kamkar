@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../../core/routes/app_routes.dart';
@@ -13,9 +14,11 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : const Color(0xFFF8FAFC),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -29,22 +32,28 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                       Text(
                         'Hello, ${controller.userName.split(" ").first} 👋',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 22,
+                              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172A),
+                              letterSpacing: -0.6,
                             ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 3),
                       Text(
                         'Need trusted hands for your next project?',
                         style: TextStyle(
-                          fontSize: 13.5,
-                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
                         ),
                       ),
                     ],
                   ),
                   GestureDetector(
-                    onTap: () => Get.toNamed(AppRoutes.customerProfile),
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      Get.toNamed(AppRoutes.customerProfile);
+                    },
                     child: Container(
                       width: 44,
                       height: 44,
@@ -53,7 +62,7 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.3),
+                            color: AppColors.primary.withValues(alpha: 0.35),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
@@ -65,9 +74,9 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                     ),
                   ),
                 ],
-              ).animate().fadeIn(duration: 300.ms),
+              ).animate().fadeIn(duration: 250.ms),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // Hero Discover Banner Card
               Container(
@@ -75,7 +84,7 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
                   gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(26),
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.primary.withValues(alpha: 0.35),
@@ -88,45 +97,57 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4.5),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white.withValues(alpha: 0.22),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white30, width: 0.8),
                       ),
-                      child: const Text(
-                        'VERIFIED & BACKGROUND CHECKED',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          letterSpacing: 0.5,
-                        ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.verified_user_rounded, size: 12, color: Colors.white),
+                          SizedBox(width: 4),
+                          Text(
+                            'VERIFIED & BACKGROUND CHECKED',
+                            style: TextStyle(
+                              fontSize: 9.5,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
                     const Text(
                       'Hire Skilled Workers\nin Under 60 Seconds',
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
                         color: Colors.white,
-                        height: 1.25,
+                        height: 1.2,
+                        letterSpacing: -0.4,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
                     ElevatedButton(
-                      onPressed: () => Get.toNamed(AppRoutes.marketplace),
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(AppRoutes.marketplace);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         elevation: 0,
                       ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Browse Directory', style: TextStyle(fontWeight: FontWeight.w800)),
+                          Text('Browse Directory', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5)),
                           SizedBox(width: 6),
                           Icon(Icons.arrow_forward_rounded, size: 16),
                         ],
@@ -134,17 +155,18 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 150.ms).slideY(begin: 0.08, end: 0),
+              ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.05, end: 0),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
-              // Activity Metrics
+              // Activity Overview
               Text(
                 'Activity Overview',
                 style: TextStyle(
                   fontSize: 16.5,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172A),
+                  letterSpacing: -0.3,
                 ),
               ),
               const SizedBox(height: 12),
@@ -158,7 +180,10 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                       icon: Icons.pending_actions_rounded,
                       color: AppColors.primary,
                       isDark: isDark,
-                      onTap: () => Get.toNamed(AppRoutes.bookingList),
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(AppRoutes.bookingList);
+                      },
                     ),
                     const SizedBox(width: 12),
                     _buildStatCard(
@@ -166,42 +191,74 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                       title: 'Completed Jobs',
                       value: '${controller.dashboard.value.completedBookingsCount}',
                       icon: Icons.check_circle_outline_rounded,
-                      color: AppColors.success,
+                      color: const Color(0xFF10B981),
                       isDark: isDark,
-                      onTap: () => Get.toNamed(AppRoutes.bookingList),
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(AppRoutes.bookingList);
+                      },
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 200.ms),
+              ).animate().fadeIn(delay: 150.ms),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
-              // Quick Categories Grid
+              // Popular Trades
               Text(
                 'Popular Trades',
                 style: TextStyle(
                   fontSize: 16.5,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172A),
+                  letterSpacing: -0.3,
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
-                childAspectRatio: 1.6,
+                childAspectRatio: 1.8,
                 children: [
-                  _buildTradeShortcut(context, 'Electricians', '45+ Pros', Icons.bolt_rounded, AppColors.warning, isDark),
-                  _buildTradeShortcut(context, 'Plumbing', '38+ Pros', Icons.water_drop_rounded, AppColors.secondary, isDark),
-                  _buildTradeShortcut(context, 'HVAC & AC', '24+ Pros', Icons.ac_unit_rounded, AppColors.primary, isDark),
-                  _buildTradeShortcut(context, 'Carpentry', '29+ Pros', Icons.carpenter_rounded, AppColors.success, isDark),
+                  _buildTradeShortcut(
+                    context,
+                    name: 'Electricians',
+                    count: '45+ Pros',
+                    icon: Icons.bolt_rounded,
+                    color: const Color(0xFFF59E0B),
+                    isDark: isDark,
+                  ),
+                  _buildTradeShortcut(
+                    context,
+                    name: 'Plumbing',
+                    count: '38+ Pros',
+                    icon: Icons.water_drop_rounded,
+                    color: const Color(0xFF0284C7),
+                    isDark: isDark,
+                  ),
+                  _buildTradeShortcut(
+                    context,
+                    name: 'HVAC & AC',
+                    count: '24+ Pros',
+                    icon: Icons.ac_unit_rounded,
+                    color: const Color(0xFF0D9488),
+                    isDark: isDark,
+                  ),
+                  _buildTradeShortcut(
+                    context,
+                    name: 'Carpentry',
+                    count: '29+ Pros',
+                    icon: Icons.handyman_rounded,
+                    color: const Color(0xFFD97706),
+                    isDark: isDark,
+                  ),
                 ],
-              ).animate().fadeIn(delay: 250.ms),
+              ).animate().fadeIn(delay: 200.ms),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -225,12 +282,15 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
             color: isDark ? AppColors.surfaceDark : Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: isDark ? AppColors.borderDark : AppColors.borderLight),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+              width: 1.2,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
-                blurRadius: 10,
+                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                blurRadius: 12,
                 offset: const Offset(0, 3),
               ),
             ],
@@ -239,25 +299,30 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(9),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
+                  color: color.withValues(alpha: isDark ? 0.2 : 0.12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 20),
               ),
               const SizedBox(height: 14),
               Text(
                 value,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                  letterSpacing: -0.5,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
                 title,
                 style: TextStyle(
                   fontSize: 12.5,
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                  fontWeight: FontWeight.w500,
+                  color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -268,31 +333,44 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
   }
 
   Widget _buildTradeShortcut(
-    BuildContext context,
-    String name,
-    String count,
-    IconData icon,
-    Color color,
-    bool isDark,
-  ) {
+    BuildContext context, {
+    required String name,
+    required String count,
+    required IconData icon,
+    required Color color,
+    required bool isDark,
+  }) {
     return GestureDetector(
-      onTap: () => Get.toNamed(AppRoutes.marketplace),
+      onTap: () {
+        HapticFeedback.selectionClick();
+        Get.toNamed(AppRoutes.marketplace);
+      },
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: isDark ? AppColors.surfaceDark : Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: isDark ? AppColors.borderDark : AppColors.borderLight),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+            width: 1.2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.02),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(9),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
+                color: color.withValues(alpha: isDark ? 0.2 : 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 22),
+              child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -302,14 +380,21 @@ class CustomerDashboardView extends GetView<CustomerDashboardController> {
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     count,
                     style: TextStyle(
                       fontSize: 11.5,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
                     ),
                   ),
                 ],

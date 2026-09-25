@@ -12,6 +12,7 @@ void main() async {
   // Initialize Core Storage
   final storageService = SecureStorageService();
   await storageService.init();
+  Get.put<SecureStorageService>(storageService, permanent: true);
 
   runApp(KamkarApp(storageService: storageService));
 }

@@ -21,7 +21,9 @@ class InitialBinding extends Bindings {
   @override
   void dependencies() {
     // Storage
-    final storageService = Get.put<SecureStorageService>(SecureStorageService(), permanent: true);
+    final storageService = Get.isRegistered<SecureStorageService>()
+        ? Get.find<SecureStorageService>()
+        : Get.put<SecureStorageService>(SecureStorageService(), permanent: true);
 
     // Network & Realtime
     final apiClient = Get.put<ApiClient>(ApiClient(storageService: storageService), permanent: true);

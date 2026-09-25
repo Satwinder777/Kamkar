@@ -14,40 +14,43 @@ class AdminRepository {
       return List<VerificationRequest>.from(MockDataProvider.mockAdminRequests);
     }
     try {
-      return await remoteDataSource.getVerificationRequests(status: status);
+      final list = await remoteDataSource.getVerificationRequests(status: status);
+      if (list.isNotEmpty) return list;
+      return List<VerificationRequest>.from(MockDataProvider.mockAdminRequests);
     } catch (_) {
       return List<VerificationRequest>.from(MockDataProvider.mockAdminRequests);
     }
   }
 
-  Future<void> approveWorker(String workerId) async {
+  Future<void> approveWorker(String workerId, {String requestType = 'Worker', String? notes}) async {
     if (AppConfig.isMockMode) {
-      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId);
+      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId || r.id == workerId);
       return;
     }
     try {
-      await remoteDataSource.submitVerificationDecision(
-        workerId: workerId,
-        isApproved: true,
+      await remoteDataSource.approveVerification(
+        requestType: requestType,
+        id: workerId,
+        notes: notes,
       );
     } catch (_) {
-      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId);
+      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId || r.id == workerId);
     }
   }
 
-  Future<void> rejectWorker(String workerId, String reason) async {
+  Future<void> rejectWorker(String workerId, String reason, {String requestType = 'Worker'}) async {
     if (AppConfig.isMockMode) {
-      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId);
+      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId || r.id == workerId);
       return;
     }
     try {
-      await remoteDataSource.submitVerificationDecision(
-        workerId: workerId,
-        isApproved: false,
-        rejectionReason: reason,
+      await remoteDataSource.rejectVerification(
+        requestType: requestType,
+        id: workerId,
+        notes: reason,
       );
     } catch (_) {
-      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId);
+      MockDataProvider.mockAdminRequests.removeWhere((r) => r.workerId == workerId || r.id == workerId);
     }
   }
 }

@@ -1,18 +1,30 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import '../theme/app_colors.dart';
+
+class NavItem {
+  final IconData icon;
+  final IconData? activeIcon;
+  final String label;
+
+  const NavItem({
+    required this.icon,
+    this.activeIcon,
+    required this.label,
+  });
+}
 
 class FloatingNavBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabChange;
-  final List<GButton> tabs;
+  final List<NavItem> items;
 
   const FloatingNavBar({
     super.key,
     required this.selectedIndex,
     required this.onTabChange,
-    required this.tabs,
+    required this.items,
   });
 
   @override
@@ -21,53 +33,116 @@ class FloatingNavBar extends StatelessWidget {
 
     return SafeArea(
       child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: isDark ? AppColors.borderDark : AppColors.borderLight),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.12),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
+        margin: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xDD111827)
+                    : Colors.white.withValues(alpha: 0.92),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  color: isDark
+                      ? const Color(0x44374151)
+                      : const Color(0x66E2E8F0),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
+                    blurRadius: 12,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(items.length, (index) {
+                  final item = items[index];
+                  final isSelected = selectedIndex == index;
+
+                  return Flexible(
+                    flex: isSelected ? 2 : 1,
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onTabChange(index);
+                      },
+                      behavior: HitTestBehavior.opaque,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 260),
+                        curve: Curves.easeOutCubic,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isSelected ? 12 : 8,
+                          vertical: 9,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: isSelected
+                              ? AppColors.primaryGradient
+                              : null,
+                          borderRadius: BorderRadius.circular(22),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.primary.withValues(alpha: 0.35),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              isSelected
+                                  ? (item.activeIcon ?? item.icon)
+                                  : item.icon,
+                              size: 20,
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark
+                                      ? AppColors.textSecondaryDark
+                                      : const Color(0xFF64748B)),
+                            ),
+                            if (isSelected) ...[
+                              const SizedBox(width: 5),
+                              Flexible(
+                                child: Text(
+                                  item.label,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    letterSpacing: -0.2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
             ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: GNav(
-          rippleColor: AppColors.primary.withValues(alpha: 0.15),
-          hoverColor: AppColors.primary.withValues(alpha: 0.08),
-          gap: 8,
-          activeColor: AppColors.primary,
-          iconSize: 22,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          duration: const Duration(milliseconds: 320),
-          tabBackgroundColor: isDark ? AppColors.cardDark : AppColors.primarySoft,
-          tabBorderRadius: 20,
-          tabBorder: Border.all(
-            color: isDark ? AppColors.primaryDark : const Color(0xFFC7D2FE),
-            width: 1.0,
           ),
-          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-          textStyle: const TextStyle(
-            fontSize: 12.5,
-            fontWeight: FontWeight.w800,
-            color: AppColors.primary,
-          ),
-          tabs: tabs,
-          selectedIndex: selectedIndex,
-          onTabChange: (index) {
-            HapticFeedback.lightImpact();
-            onTabChange(index);
-          },
         ),
       ),
     );
   }
 }
+

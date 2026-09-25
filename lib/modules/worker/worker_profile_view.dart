@@ -9,20 +9,25 @@ import '../../core/widgets/confirmation_bottom_sheet.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../data/repositories/auth_repository.dart';
 
-class CustomerProfileView extends StatefulWidget {
-  const CustomerProfileView({super.key});
+class WorkerProfileView extends StatefulWidget {
+  const WorkerProfileView({super.key});
 
   @override
-  State<CustomerProfileView> createState() => _CustomerProfileViewState();
+  State<WorkerProfileView> createState() => _WorkerProfileViewState();
 }
 
-class _CustomerProfileViewState extends State<CustomerProfileView> {
-  final RxBool biometricEnabled = true.obs;
-  final RxString defaultAddress = 'Villa 14, Palm Jumeirah, Dubai'.obs;
-  final RxList<String> savedAddresses = <String>[
-    'Villa 14, Palm Jumeirah, Dubai (Home)',
-    'Unit 1204, Marina Heights, Dubai Marina (Apartment)',
-    'Office 802, Boulevard Plaza Tower 1, Downtown (Office)',
+class _WorkerProfileViewState extends State<WorkerProfileView> {
+  final RxBool isAvailable = true.obs;
+  final RxDouble hourlyRate = 45.0.obs;
+  final RxDouble walletBalance = 3840.0.obs;
+  final RxInt coverageRadiusKm = 15.obs;
+  final RxList<String> skills = <String>[
+    '⚡ Main Panel Installation',
+    '🔍 Fault Diagnostics',
+    '🔌 Commercial Rewiring',
+    '💡 LED Lighting Setup',
+    '🚗 EV Home Chargers',
+    '🚨 24/7 Emergency Repairs',
   ].obs;
 
   @override
@@ -31,10 +36,11 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
     final userData = authRepo.userData ?? {};
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final name = userData['fullName']?.toString() ?? 'Satwinder Singh';
-    final email = userData['email']?.toString() ?? 'org@kamkar.com';
-    final phone = userData['phoneNumber']?.toString() ?? '+1 (555) 234-5678';
-    final role = authRepo.userRole.isNotEmpty ? authRepo.userRole : 'Organisation';
+    final name = userData['fullName']?.toString() ?? 'Rajesh Sharma';
+    final email = userData['email']?.toString() ?? 'pro@kamkar.com';
+    final phone = userData['phoneNumber']?.toString() ?? '+1 (555) 349-8201';
+    final workerType = userData['workerType']?.toString() ?? 'Master Electrician';
+    final experience = userData['yearsOfExperience']?.toString() ?? '8';
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : const Color(0xFFF8FAFC),
@@ -43,17 +49,17 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'My Profile',
+          'Craftsman Profile',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w800,
             color: isDark ? Colors.white : const Color(0xFF0F172A),
-            letterSpacing: -0.5,
+            letterSpacing: -0.4,
           ),
         ),
         actions: [
           IconButton(
-            tooltip: 'Support & Help',
+            tooltip: 'Support Desk',
             onPressed: () => Get.toNamed(AppRoutes.helpSupport),
             icon: Container(
               padding: const EdgeInsets.all(8),
@@ -96,11 +102,11 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 32),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Hero Profile Card with Avatar & Badges
+              // Hero Craftsman Profile Card
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -120,16 +126,16 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                 ),
                 child: Column(
                   children: [
-                    // Top Decorative Gradient Banner
+                    // Top Trade Gradient Banner
                     Container(
-                      height: 70,
+                      height: 75,
                       width: double.infinity,
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
                             Color(0xFF4F46E5),
-                            Color(0xFF7C3AED),
                             Color(0xFF6366F1),
+                            Color(0xFF8B5CF6),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -138,17 +144,17 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                       ),
                     ),
 
-                    // Overlapping Avatar
+                    // Overlapping Avatar & Verified Badge
                     Transform.translate(
-                      offset: const Offset(0, -40),
+                      offset: const Offset(0, -42),
                       child: Column(
                         children: [
                           Stack(
                             alignment: Alignment.bottomRight,
                             children: [
                               Container(
-                                width: 84,
-                                height: 84,
+                                width: 88,
+                                height: 88,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: isDark ? AppColors.surfaceDark : Colors.white,
@@ -158,9 +164,9 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.15),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
+                                      color: Colors.black.withValues(alpha: 0.18),
+                                      blurRadius: 14,
+                                      offset: const Offset(0, 5),
                                     ),
                                   ],
                                 ),
@@ -168,7 +174,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: LinearGradient(
-                                      colors: [Color(0xFF4F46E5), Color(0xFF8B5CF6)],
+                                      colors: [Color(0xFF4F46E5), Color(0xFF9333EA)],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     ),
@@ -177,7 +183,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                                     child: Text(
                                       name.isNotEmpty
                                           ? name.split(' ').map((e) => e.isNotEmpty ? e[0] : '').take(2).join().toUpperCase()
-                                          : 'SS',
+                                          : 'RS',
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 28,
@@ -199,30 +205,30 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                                   ),
                                 ),
                                 child: const Icon(
-                                  Icons.check,
-                                  size: 12,
+                                  Icons.verified_rounded,
+                                  size: 14,
                                   color: Colors.white,
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
 
-                          // User Full Name
+                          // Worker Name
                           Text(
                             name,
                             style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
+                              fontSize: 21,
+                              fontWeight: FontWeight.w900,
                               color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172A),
                               letterSpacing: -0.4,
                             ),
                           ),
 
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 4),
 
-                          // Role / Type Pill Badge
+                          // Trade Specialty Pill
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                             decoration: BoxDecoration(
@@ -240,18 +246,18 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(
-                                  Icons.business_center_rounded,
-                                  size: 13,
+                                  Icons.electric_bolt_rounded,
+                                  size: 14,
                                   color: AppColors.primary,
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  role.toUpperCase(),
+                                  workerType.toUpperCase(),
                                   style: const TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w800,
                                     color: AppColors.primary,
-                                    letterSpacing: 0.8,
+                                    letterSpacing: 0.6,
                                   ),
                                 ),
                               ],
@@ -261,64 +267,110 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                       ),
                     ),
 
-                    // Mini Stats Bar
+                    // Quick Stats Row
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
                         decoration: BoxDecoration(
                           color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            _buildStatColumn('Bookings', '14', isDark),
-                            _buildVerticalDivider(isDark),
-                            _buildStatColumn('Rating', '4.9 ★', isDark),
-                            _buildVerticalDivider(isDark),
-                            _buildStatColumn('Status', 'Active', isDark, valueColor: const Color(0xFF10B981)),
-                          ],
+                        child: Obx(
+                          () => Row(
+                            children: [
+                              _buildStatColumn('Hourly Rate', '\$${hourlyRate.value.toInt()}/hr', isDark,
+                                  valueColor: AppColors.primary),
+                              _buildVerticalDivider(isDark),
+                              _buildStatColumn('Rating', '4.9 ★', isDark, valueColor: const Color(0xFFF59E0B)),
+                              _buildVerticalDivider(isDark),
+                              _buildStatColumn('Jobs Done', '42', isDark),
+                              _buildVerticalDivider(isDark),
+                              _buildStatColumn('Experience', '${experience}y+', isDark),
+                            ],
+                          ),
                         ),
                       ),
                     ),
 
-                    // Quick Edit Profile & Saved Addresses Buttons
+                    // Availability Status Switch Card
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () => _showEditProfileDialog(context, name, email, phone),
-                              icon: const Icon(Icons.edit_outlined, size: 16),
-                              label: const Text('Edit Details', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: AppColors.primary,
-                                side: BorderSide(color: AppColors.primary.withValues(alpha: 0.5)),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                padding: const EdgeInsets.symmetric(vertical: 11),
-                              ),
+                      child: Obx(
+                        () => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: isAvailable.value
+                                ? const Color(0xFF10B981).withValues(alpha: isDark ? 0.15 : 0.08)
+                                : const Color(0xFF64748B).withValues(alpha: isDark ? 0.15 : 0.08),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: isAvailable.value
+                                  ? const Color(0xFF10B981).withValues(alpha: 0.3)
+                                  : (isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1)),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () => _showSavedAddressesModal(context),
-                              icon: const Icon(Icons.location_on_outlined, size: 16),
-                              label: const Text('Addresses', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
-                                foregroundColor: isDark ? Colors.white : const Color(0xFF0F172A),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                padding: const EdgeInsets.symmetric(vertical: 11),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isAvailable.value ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
+                                ),
                               ),
-                            ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      isAvailable.value ? 'Online & Available' : 'Offline / On Break',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: isAvailable.value
+                                            ? const Color(0xFF10B981)
+                                            : (isDark ? Colors.white70 : const Color(0xFF64748B)),
+                                      ),
+                                    ),
+                                    Text(
+                                      isAvailable.value
+                                          ? 'Ready to receive immediate customer dispatches'
+                                          : 'You will not receive new booking requests',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Switch.adaptive(
+                                value: isAvailable.value,
+                                activeTrackColor: const Color(0xFF10B981),
+                                activeThumbColor: Colors.white,
+                                onChanged: (val) {
+                                  HapticFeedback.lightImpact();
+                                  isAvailable.value = val;
+                                  Get.snackbar(
+                                    val ? 'You are Online' : 'You are Offline',
+                                    val
+                                        ? 'Customers in Dubai Marina can now discover and book your services.'
+                                        : 'Availability turned off. Enjoy your break!',
+                                    duration: const Duration(seconds: 2),
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    margin: const EdgeInsets.all(16),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -327,11 +379,205 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
 
               const SizedBox(height: 22),
 
-              // Section 1: Contact & Account Information
+              // Section 1: Earnings & Payout Bank Account (UAE IBAN)
               Padding(
                 padding: const EdgeInsets.only(left: 4, bottom: 10),
                 child: Text(
-                  'Account Information',
+                  'Earnings Wallet & Payouts',
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? Colors.white70 : const Color(0xFF475569),
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? [const Color(0xFF064E3B), const Color(0xFF065F46)]
+                        : [const Color(0xFFECFDF5), const Color(0xFFD1FAE5)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Available for Payout',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? const Color(0xFFA7F3D0) : const Color(0xFF047857),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Obx(
+                              () => Text(
+                                'AED ${walletBalance.value.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w900,
+                                  color: isDark ? Colors.white : const Color(0xFF064E3B),
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () => _handleInstantCashout(context),
+                          icon: const Icon(Icons.flash_on_rounded, size: 16),
+                          label: const Text('Cashout', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF10B981),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.black.withValues(alpha: 0.25) : Colors.white.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.account_balance_rounded, color: Color(0xFF10B981), size: 18),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Emirates NBD • IBAN: AE29 0330 •••• 8831',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? Colors.white70 : const Color(0xFF065F46),
+                              ),
+                            ),
+                          ),
+                          const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 16),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ).animate().fadeIn(delay: 100.ms),
+
+              const SizedBox(height: 22),
+
+              // Section 2: Trade Skills & Certifications
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Verified Skills & Trade License',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? Colors.white70 : const Color(0xFF475569),
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => _showEditTradeModal(context),
+                      child: const Text('Edit Trade', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.surfaceDark : Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                    width: 1.2,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // License Status Banner
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.shield_rounded, color: Color(0xFF10B981), size: 20),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'UAE Trade Board License #UAE-EL-8842',
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF10B981),
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  'Government verified background & technical assessment',
+                                  style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 18),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Skill Badges
+                    Obx(
+                      () => Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: skills.map((s) => _SkillChip(s)).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ).animate().fadeIn(delay: 150.ms),
+
+              const SizedBox(height: 22),
+
+              // Section 3: Contact & Service Coverage
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 10),
+                child: Text(
+                  'Contact & Service Area',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w800,
@@ -350,13 +596,6 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                     color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
                     width: 1.2,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
                 ),
                 child: Column(
                   children: [
@@ -365,7 +604,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                       icon: Icons.mail_outline_rounded,
                       iconBg: const Color(0xFFEEF2FF),
                       iconColor: const Color(0xFF4F46E5),
-                      label: 'Email Address',
+                      label: 'Registered Email',
                       value: email,
                       isDark: isDark,
                       onCopy: () {
@@ -382,7 +621,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                       icon: Icons.phone_iphone_rounded,
                       iconBg: const Color(0xFFECFDF5),
                       iconColor: const Color(0xFF10B981),
-                      label: 'Phone Number',
+                      label: 'Direct Phone',
                       value: phone,
                       isDark: isDark,
                       onCopy: () {
@@ -400,109 +639,19 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                         icon: Icons.location_on_outlined,
                         iconBg: const Color(0xFFFEF3C7),
                         iconColor: const Color(0xFFD97706),
-                        label: 'Default Service Address',
-                        value: defaultAddress.value,
+                        label: 'Active Service Region',
+                        value: 'Dubai Marina & JLT (${coverageRadiusKm.value} km Radius)',
                         isDark: isDark,
-                        onTap: () => _showSavedAddressesModal(context),
+                        onTap: () => _showEditTradeModal(context),
                       ),
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 100.ms),
+              ).animate().fadeIn(delay: 200.ms),
 
               const SizedBox(height: 22),
 
-              // Section 2: Payment Methods & Escrow Protection
-              Padding(
-                padding: const EdgeInsets.only(left: 4, bottom: 10),
-                child: Text(
-                  'Payment Methods & Billing',
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white70 : const Color(0xFF475569),
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ),
-
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.surfaceDark : Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                    width: 1.2,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF10B981).withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: const Icon(Icons.credit_card_rounded, color: Color(0xFF10B981), size: 22),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Visa ending in 4242',
-                                style: TextStyle(
-                                  fontSize: 14.5,
-                                  fontWeight: FontWeight.w800,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              const Text(
-                                'Default payment card • Expires 08/28',
-                                style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => _showPaymentMethodsModal(context),
-                          child: const Text('Manage', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.2)),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.lock_rounded, size: 14, color: Color(0xFF10B981)),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Kamkar Escrow Shield: Funds are released only after work completion.',
-                              style: TextStyle(fontSize: 10.5, color: Color(0xFF10B981), fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(delay: 150.ms),
-
-              const SizedBox(height: 22),
-
-              // Section 3: Help, Support & Preferences
+              // Section 4: Support & Preferences
               Padding(
                 padding: const EdgeInsets.only(left: 4, bottom: 10),
                 child: Text(
@@ -524,13 +673,6 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                     color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
                     width: 1.2,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
                 ),
                 child: Column(
                   children: [
@@ -539,8 +681,8 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                       icon: Icons.headset_mic_rounded,
                       iconBg: const Color(0xFFEEF2FF),
                       iconColor: const Color(0xFF4F46E5),
-                      title: '24/7 Customer Support & FAQs',
-                      subtitle: 'Live agent chat, toll-free call, and submit ticket',
+                      title: 'Craftsman Support & Dispute Center',
+                      subtitle: '24/7 payout assistance, instant chat & job resolution',
                       isDark: isDark,
                       trailingBadge: '24/7 Live',
                       onTap: () => Get.toNamed(AppRoutes.helpSupport),
@@ -548,7 +690,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
 
                     Divider(height: 1, color: isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9)),
 
-                    // Dark Mode Switch Row
+                    // Dark Mode Switch
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       child: Row(
@@ -580,7 +722,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  isDark ? 'Sleek dark theme active' : 'Clean light theme active',
+                                  isDark ? 'Dark theme enabled' : 'Clean light theme enabled',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
@@ -606,100 +748,36 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
 
                     Divider(height: 1, color: isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9)),
 
-                    // Biometric Lock Switch
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFECFDF5),
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: const Icon(
-                              Icons.fingerprint_rounded,
-                              color: Color(0xFF10B981),
-                              size: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Biometric & Face ID Lock',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: isDark ? Colors.white : const Color(0xFF0F172A),
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  'Require Touch ID/Face ID when opening app',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Obx(
-                            () => Switch.adaptive(
-                              value: biometricEnabled.value,
-                              activeTrackColor: const Color(0xFF10B981),
-                              activeThumbColor: Colors.white,
-                              onChanged: (val) {
-                                HapticFeedback.lightImpact();
-                                biometricEnabled.value = val;
-                                Get.snackbar(
-                                  val ? 'Biometrics Enabled' : 'Biometrics Disabled',
-                                  val ? 'App lock is now active.' : 'App lock has been disabled.',
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  duration: const Duration(seconds: 2),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    Divider(height: 1, color: isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9)),
-
-                    // App Tour Walkthrough
-                    _buildSettingsTile(
-                      icon: Icons.auto_awesome_rounded,
-                      iconBg: const Color(0xFFFFFBEB),
-                      iconColor: const Color(0xFFD97706),
-                      title: 'App Tour & Feature Guide',
-                      subtitle: 'Review animated walkthrough of all app tools',
-                      isDark: isDark,
-                      onTap: () => Get.toNamed(AppRoutes.onboarding),
-                    ),
-
-                    Divider(height: 1, color: isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9)),
-
-                    // Full App Settings
+                    // Settings & Languages
                     _buildSettingsTile(
                       icon: Icons.tune_rounded,
                       iconBg: const Color(0xFFF3E8FF),
                       iconColor: const Color(0xFF9333EA),
                       title: 'Settings & Language',
-                      subtitle: 'Change app language, notifications & security',
+                      subtitle: 'App preferences, language & notification alerts',
                       isDark: isDark,
                       onTap: () => Get.toNamed(AppRoutes.settings),
                     ),
+
+                    Divider(height: 1, color: isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9)),
+
+                    // App Tour
+                    _buildSettingsTile(
+                      icon: Icons.auto_awesome_rounded,
+                      iconBg: const Color(0xFFFFFBEB),
+                      iconColor: const Color(0xFFD97706),
+                      title: 'Worker App Tour',
+                      subtitle: 'Review features & guidelines for accepting jobs',
+                      isDark: isDark,
+                      onTap: () => Get.toNamed(AppRoutes.onboarding),
+                    ),
                   ],
                 ),
-              ).animate().fadeIn(delay: 200.ms),
+              ).animate().fadeIn(delay: 250.ms),
 
               const SizedBox(height: 28),
 
-              // Sign Out Button with Confirmation Bottom Sheet
+              // Sign Out Button
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -708,7 +786,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                     final confirmed = await ConfirmationBottomSheet.show(
                       context: context,
                       title: 'Sign Out?',
-                      message: 'Are you sure you want to sign out of your account? You will need to log back in to manage your active bookings.',
+                      message: 'Are you sure you want to sign out? You will need to log back in to receive customer dispatches.',
                       confirmText: 'Sign Out',
                       cancelText: 'Stay Logged In',
                       icon: Icons.logout_rounded,
@@ -749,14 +827,14 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
                     ],
                   ),
                 ),
-              ).animate().fadeIn(delay: 250.ms),
+              ).animate().fadeIn(delay: 300.ms),
 
               const SizedBox(height: 18),
 
-              // App Version Branding
+              // Footer
               Center(
                 child: Text(
-                  'Kamkar v1.0.0 • On-Demand Trades UAE',
+                  'Kamkar Pro Network • UAE Licensed Craftsman',
                   style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w600,
@@ -778,7 +856,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.w900,
               color: valueColor ?? (isDark ? Colors.white : const Color(0xFF0F172A)),
             ),
@@ -787,7 +865,7 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 10.5,
               fontWeight: FontWeight.w600,
               color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
             ),
@@ -957,273 +1035,140 @@ class _CustomerProfileViewState extends State<CustomerProfileView> {
     );
   }
 
-  // MODAL DIALOGS
-  void _showEditProfileDialog(BuildContext context, String currentName, String currentEmail, String currentPhone) {
-    final nameCtrl = TextEditingController(text: currentName);
-    final phoneCtrl = TextEditingController(text: currentPhone);
+  // MODAL ACTIONS
+  Future<void> _handleInstantCashout(BuildContext context) async {
+    final confirmed = await ConfirmationBottomSheet.show(
+      context: context,
+      title: 'Instant Cashout?',
+      message: 'Transfer AED ${walletBalance.value.toStringAsFixed(2)} to Emirates NBD IBAN ending in 8831?',
+      confirmText: 'Withdraw AED ${walletBalance.value.toInt()}',
+      cancelText: 'Cancel',
+      icon: Icons.account_balance_rounded,
+      iconColor: const Color(0xFF10B981),
+      confirmButtonColor: const Color(0xFF10B981),
+    );
+
+    if (confirmed == true) {
+      walletBalance.value = 0.0;
+      Get.snackbar(
+        'Payout Initiated',
+        'AED 3,840.00 is being transferred to your Emirates NBD account. Ref: WTH-99201.',
+        backgroundColor: const Color(0xFF10B981),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
+  void _showEditTradeModal(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    double tempRate = hourlyRate.value;
+    int tempRadius = coverageRadiusKm.value;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        padding: EdgeInsets.fromLTRB(24, 20, 24, MediaQuery.of(context).viewInsets.bottom + 24),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF0F172A) : Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 44,
-                height: 4,
-                decoration: BoxDecoration(color: Colors.grey.shade400, borderRadius: BorderRadius.circular(2)),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Text(
-              'Edit Profile Details',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: isDark ? Colors.white : const Color(0xFF0F172A),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: nameCtrl,
-              decoration: InputDecoration(
-                labelText: 'Full Name',
-                prefixIcon: const Icon(Icons.person_outline_rounded),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: phoneCtrl,
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                prefixIcon: const Icon(Icons.phone_outlined),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-              ),
-            ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: 'Save Changes',
-              icon: Icons.check_circle_outline_rounded,
-              onPressed: () {
-                Navigator.pop(ctx);
-                Get.snackbar('Profile Updated', 'Your profile details have been saved successfully.',
-                    backgroundColor: const Color(0xFF10B981), colorText: Colors.white);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showSavedAddressesModal(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final newAddressCtrl = TextEditingController();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        height: MediaQuery.of(context).size.height * 0.65,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF0F172A) : Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 44,
-                height: 4,
-                decoration: BoxDecoration(color: Colors.grey.shade400, borderRadius: BorderRadius.circular(2)),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Saved Addresses',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white : const Color(0xFF0F172A),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => _addNewAddressDialog(context, newAddressCtrl),
-                  icon: const Icon(Icons.add_location_alt_rounded, color: AppColors.primary),
-                  tooltip: 'Add Address',
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  itemCount: savedAddresses.length,
-                  itemBuilder: (context, index) {
-                    final addr = savedAddresses[index];
-                    final isDefault = defaultAddress.value == addr;
-
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.surfaceDark : const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isDefault ? AppColors.primary : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
-                          width: isDefault ? 1.5 : 1.0,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.place_rounded,
-                            color: isDefault ? AppColors.primary : const Color(0xFF64748B),
-                            size: 22,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              addr,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: isDefault ? FontWeight.w800 : FontWeight.w600,
-                                color: isDark ? Colors.white : const Color(0xFF0F172A),
-                              ),
-                            ),
-                          ),
-                          if (isDefault)
-                            const Chip(
-                              label: Text('Default', style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w800)),
-                              backgroundColor: AppColors.primary,
-                              padding: EdgeInsets.zero,
-                            )
-                          else
-                            TextButton(
-                              onPressed: () {
-                                defaultAddress.value = addr;
-                                Get.snackbar('Default Address Changed', 'Updated to: $addr');
-                              },
-                              child: const Text('Set Default', style: TextStyle(fontSize: 11)),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF0F172A) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 4,
+                  decoration: BoxDecoration(color: Colors.grey.shade400, borderRadius: BorderRadius.circular(2)),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _addNewAddressDialog(BuildContext context, TextEditingController ctrl) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Add New Service Address'),
-        content: TextField(
-          controller: ctrl,
-          decoration: const InputDecoration(
-            hintText: 'e.g. Apartment 402, Marina Crown, Dubai',
+              const SizedBox(height: 18),
+              Text(
+                'Edit Trade & Pricing Settings',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                'Hourly Service Rate: \$${tempRate.toInt()}/hr',
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+              ),
+              Slider.adaptive(
+                value: tempRate,
+                min: 25,
+                max: 150,
+                divisions: 25,
+                activeColor: AppColors.primary,
+                label: '\$${tempRate.toInt()}',
+                onChanged: (val) {
+                  setSheetState(() => tempRate = val);
+                },
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Coverage Radius: $tempRadius km from Dubai Marina',
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+              ),
+              Slider.adaptive(
+                value: tempRadius.toDouble(),
+                min: 5,
+                max: 50,
+                divisions: 9,
+                activeColor: const Color(0xFF10B981),
+                label: '$tempRadius km',
+                onChanged: (val) {
+                  setSheetState(() => tempRadius = val.toInt());
+                },
+              ),
+              const SizedBox(height: 20),
+              CustomButton(
+                text: 'Save Trade Preferences',
+                icon: Icons.check_circle_outline_rounded,
+                onPressed: () {
+                  hourlyRate.value = tempRate;
+                  coverageRadiusKm.value = tempRadius;
+                  Navigator.pop(ctx);
+                  Get.snackbar('Trade Updated', 'Your hourly rate & coverage area have been updated.');
+                },
+              ),
+            ],
           ),
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-          ElevatedButton(
-            onPressed: () {
-              if (ctrl.text.trim().isNotEmpty) {
-                savedAddresses.add(ctrl.text.trim());
-                ctrl.clear();
-                Navigator.pop(ctx);
-                Get.snackbar('Address Added', 'New service address saved.');
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
       ),
     );
   }
+}
 
-  void _showPaymentMethodsModal(BuildContext context) {
+class _SkillChip extends StatelessWidget {
+  final String label;
+  const _SkillChip(this.label);
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF0F172A) : Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 44,
-                height: 4,
-                decoration: BoxDecoration(color: Colors.grey.shade400, borderRadius: BorderRadius.circular(2)),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Text(
-              'Payment Methods',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: isDark ? Colors.white : const Color(0xFF0F172A),
-              ),
-            ),
-            const SizedBox(height: 14),
-            ListTile(
-              leading: const Icon(Icons.credit_card, color: AppColors.primary),
-              title: const Text('Visa ending in 4242', style: TextStyle(fontWeight: FontWeight.w700)),
-              subtitle: const Text('Primary Method'),
-              trailing: const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981)),
-            ),
-            ListTile(
-              leading: const Icon(Icons.apple, color: Colors.black),
-              title: const Text('Apple Pay', style: TextStyle(fontWeight: FontWeight.w700)),
-              subtitle: const Text('Quick Checkout'),
-              trailing: TextButton(
-                onPressed: () => Get.snackbar('Apple Pay', 'Apple Pay enabled as backup'),
-                child: const Text('Select'),
-              ),
-            ),
-            const SizedBox(height: 14),
-            CustomButton(
-              text: 'Add New Card / Method',
-              icon: Icons.add_rounded,
-              onPressed: () {
-                Navigator.pop(ctx);
-                Get.snackbar('Add Card', 'Opening secure 3D-Secure payment tokenization...',
-                    backgroundColor: AppColors.primary, colorText: Colors.white);
-              },
-            ),
-          ],
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.white70 : const Color(0xFF334155),
         ),
       ),
     );

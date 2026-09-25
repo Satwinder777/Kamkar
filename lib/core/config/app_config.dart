@@ -1,35 +1,18 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-
 class AppConfig {
   static const String appName = 'Kamkar';
   static const String appTagline = 'Instant, Verified On-Demand Workforce';
   static const String appVersion = '1.0.0';
 
-  /// Set to true while backend API is pending/offline to bypass and mock all flows smoothly
-  /// Set to false when connecting to live ASP.NET Core 8 backend
-  static const bool isMockMode = true;
+  /// Set to false to run fully dynamic with live ASP.NET Core 8 API backend
+  static const bool isMockMode = false;
 
-  static String get baseUrl {
-    if (kIsWeb) {
-      return 'http://localhost:5294/api/v1';
-    }
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:5294/api/v1';
-    }
-    return 'http://localhost:5294/api/v1';
-  }
+  /// Live Cloudflare Tunnel Base URL for ASP.NET Core 8 API
+  static const String liveServerUrl = 'https://favour-walk-casa-methodology.trycloudflare.com';
 
-  static String get signalRHubUrl {
-    if (kIsWeb) {
-      return 'http://localhost:5294/hubs/negotiate';
-    }
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:5294/hubs/negotiate';
-    }
-    return 'http://localhost:5294/hubs/negotiate';
-  }
+  static String get baseUrl => '$liveServerUrl/api/v1';
 
-  static const Duration connectTimeout = Duration(seconds: 15);
-  static const Duration receiveTimeout = Duration(seconds: 15);
+  static String get signalRHubUrl => '$liveServerUrl/hubs/negotiate';
+
+  static const Duration connectTimeout = Duration(seconds: 25);
+  static const Duration receiveTimeout = Duration(seconds: 25);
 }

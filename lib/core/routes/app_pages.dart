@@ -28,10 +28,13 @@ import '../../modules/notifications/notification_controller.dart';
 import '../../modules/notifications/notification_list_view.dart';
 import '../../modules/settings/settings_controller.dart';
 import '../../modules/settings/user_settings_view.dart';
+import '../../modules/support/help_support_controller.dart';
+import '../../modules/support/help_support_view.dart';
 import '../../modules/worker/pending_approval_view.dart';
 import '../../modules/worker/worker_dashboard_controller.dart';
 import '../../modules/worker/worker_dashboard_view.dart';
 import '../../modules/worker/worker_onboarding_view.dart';
+import '../../modules/worker/worker_profile_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -152,6 +155,10 @@ class AppPages {
       page: () => const CustomerProfileView(),
     ),
     GetPage(
+      name: AppRoutes.workerProfile,
+      page: () => const WorkerProfileView(),
+    ),
+    GetPage(
       name: AppRoutes.workerDashboard,
       page: () => const WorkerDashboardView(),
       binding: BindingsBuilder(() {
@@ -171,6 +178,13 @@ class AppPages {
       page: () => const UserSettingsView(),
       binding: BindingsBuilder(() {
         Get.lazyPut<SettingsController>(() => SettingsController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.helpSupport,
+      page: () => const HelpSupportView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<HelpSupportController>(() => HelpSupportController());
       }),
     ),
     GetPage(

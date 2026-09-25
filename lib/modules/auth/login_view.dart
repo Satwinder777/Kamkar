@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import '../../core/routes/app_routes.dart';
+import '../../core/storage/secure_storage_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/custom_text_field.dart';
@@ -93,8 +94,11 @@ class LoginView extends GetView<AuthController> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.marketplace);
+                    onPressed: () async {
+                      if (Get.isRegistered<SecureStorageService>()) {
+                        await Get.find<SecureStorageService>().setOnboardingCompleted(true);
+                      }
+                      Get.offAllNamed(AppRoutes.main);
                     },
                     child: const Text(
                       'Browse as Guest →',

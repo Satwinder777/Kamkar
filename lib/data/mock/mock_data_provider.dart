@@ -49,6 +49,7 @@ class MockDataProvider {
         fullName: 'Rajesh Sharma',
         workerType: 'Electrician',
         workerTypeId: 't_elec',
+        profileImageUrl: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=600&auto=format&fit=crop&q=80',
         hourlyRate: 45.0,
         rating: 4.9,
         reviewsCount: 124,
@@ -63,8 +64,8 @@ class MockDataProvider {
           ServiceItem(id: 's_3', workerTypeId: 't_elec', name: 'Full DB Box Upgrade', basePrice: 120.0, description: 'Main distribution board overhaul & safety testing'),
         ],
         portfolioPhotos: [
-          'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600',
-          'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600',
+          'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
         ],
       ),
       WorkerProfile(
@@ -73,6 +74,7 @@ class MockDataProvider {
         fullName: 'Mohammed Al-Hashmi',
         workerType: 'Plumbing',
         workerTypeId: 't_plumb',
+        profileImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80',
         hourlyRate: 40.0,
         rating: 4.8,
         reviewsCount: 89,
@@ -86,8 +88,8 @@ class MockDataProvider {
           ServiceItem(id: 's_5', workerTypeId: 't_plumb', name: 'Water Heater Repair', basePrice: 55.0, description: 'Element replacement & pressure valve check'),
         ],
         portfolioPhotos: [
-          'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600',
-          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?w=600',
+          'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?w=800&auto=format&fit=crop&q=80',
         ],
       ),
       WorkerProfile(
@@ -96,6 +98,7 @@ class MockDataProvider {
         fullName: 'Vikram Patel',
         workerType: 'HVAC',
         workerTypeId: 't_hvac',
+        profileImageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&auto=format&fit=crop&q=80',
         hourlyRate: 60.0,
         rating: 5.0,
         reviewsCount: 156,
@@ -109,7 +112,8 @@ class MockDataProvider {
           ServiceItem(id: 's_7', workerTypeId: 't_hvac', name: 'Gas Refrigerant Refill', basePrice: 75.0, description: 'R410A / R22 gas top-up with pressure test'),
         ],
         portfolioPhotos: [
-          'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600',
+          'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80',
+          'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&auto=format&fit=crop&q=80',
         ],
       ),
       WorkerProfile(
@@ -118,6 +122,7 @@ class MockDataProvider {
         fullName: 'Ahmed Farooq',
         workerType: 'Carpentry',
         workerTypeId: 't_carp',
+        profileImageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&auto=format&fit=crop&q=80',
         hourlyRate: 38.0,
         rating: 4.7,
         reviewsCount: 64,
@@ -131,7 +136,7 @@ class MockDataProvider {
           ServiceItem(id: 's_9', workerTypeId: 't_carp', name: 'Door Lock & Hinge Repair', basePrice: 30.0, description: 'Smart lock installation & alignment'),
         ],
         portfolioPhotos: [
-          'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=600',
+          'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=800&auto=format&fit=crop&q=80',
         ],
       ),
       WorkerProfile(
@@ -140,6 +145,7 @@ class MockDataProvider {
         fullName: 'Suresh Kumar',
         workerType: 'Painting',
         workerTypeId: 't_paint',
+        profileImageUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&auto=format&fit=crop&q=80',
         hourlyRate: 32.0,
         rating: 4.8,
         reviewsCount: 92,
@@ -153,7 +159,7 @@ class MockDataProvider {
           ServiceItem(id: 's_11', workerTypeId: 't_paint', name: 'Full Apartment Paint', basePrice: 180.0, description: 'Complete wall & ceiling paint with touchup'),
         ],
         portfolioPhotos: [
-          'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600',
+          'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&auto=format&fit=crop&q=80',
         ],
       ),
     ];

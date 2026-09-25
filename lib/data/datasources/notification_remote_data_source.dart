@@ -15,7 +15,21 @@ class NotificationRemoteDataSource {
     return [];
   }
 
+  Future<int> getUnreadCount() async {
+    final response = await apiClient.get(ApiConstants.unreadNotificationsCount);
+    if (response is Map<String, dynamic>) {
+      return (response['unreadCount'] as num?)?.toInt() ?? 0;
+    } else if (response is num) {
+      return response.toInt();
+    }
+    return 0;
+  }
+
   Future<void> markAsRead(String notificationId) async {
-    await apiClient.put('${ApiConstants.markNotificationRead}/$notificationId/read');
+    await apiClient.post('${ApiConstants.notifications}/$notificationId/read');
+  }
+
+  Future<void> markAllAsRead() async {
+    await apiClient.post(ApiConstants.markAllNotificationsRead);
   }
 }

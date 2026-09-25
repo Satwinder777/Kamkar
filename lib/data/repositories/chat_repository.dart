@@ -19,9 +19,28 @@ class ChatRepository {
       return List<NegotiationThread>.from(MockDataProvider.mockThreads);
     }
     try {
-      return await remoteDataSource.getThreads();
+      final list = await remoteDataSource.getThreads();
+      if (list.isNotEmpty) return list;
+      return List<NegotiationThread>.from(MockDataProvider.mockThreads);
     } catch (_) {
       return List<NegotiationThread>.from(MockDataProvider.mockThreads);
+    }
+  }
+
+  Future<NegotiationThread> openThread(String workerProfileId) async {
+    if (AppConfig.isMockMode) {
+      return MockDataProvider.mockThreads.firstWhere(
+        (t) => t.workerId == workerProfileId,
+        orElse: () => MockDataProvider.mockThreads.first,
+      );
+    }
+    try {
+      return await remoteDataSource.openThread(workerProfileId);
+    } catch (_) {
+      return MockDataProvider.mockThreads.firstWhere(
+        (t) => t.workerId == workerProfileId,
+        orElse: () => MockDataProvider.mockThreads.first,
+      );
     }
   }
 
@@ -42,7 +61,19 @@ class ChatRepository {
     }
 
     try {
-      return await remoteDataSource.getMessages(threadId);
+      final list = await remoteDataSource.getMessages(threadId);
+      if (list.isNotEmpty) return list;
+      return List<ChatMessage>.from(MockDataProvider.mockMessages[threadId] ?? [
+        ChatMessage(
+          id: 'm_welcome',
+          threadId: threadId,
+          senderId: 'worker_pro',
+          senderName: 'Verified Pro',
+          message: 'Hello! Thanks for reaching out. How can I assist you with your trade request today?',
+          createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
+          isMine: false,
+        ),
+      ]);
     } catch (_) {
       return List<ChatMessage>.from(MockDataProvider.mockMessages[threadId] ?? [
         ChatMessage(
@@ -135,9 +166,10 @@ class ChatRepository {
       if (signalRService.isConnected) {
         await signalRService.acceptNegotiationRate(threadId, offeredRate);
       }
-      await remoteDataSource.proposeOffer(
+      await remoteDataSource.sendMessage(
         threadId: threadId,
-        offeredRate: offeredRate,
+        message: 'Proposed Rate: \$$offeredRate/hr',
+        proposedRate: offeredRate,
       );
     } catch (_) {}
   }

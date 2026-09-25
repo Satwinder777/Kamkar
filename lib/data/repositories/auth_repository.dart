@@ -218,9 +218,11 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
-    try {
-      await remoteDataSource.logout();
-    } catch (_) {}
+    if (!AppConfig.isMockMode) {
+      try {
+        await remoteDataSource.logout().timeout(const Duration(milliseconds: 1500));
+      } catch (_) {}
+    }
     await storageService.clearSession();
   }
 

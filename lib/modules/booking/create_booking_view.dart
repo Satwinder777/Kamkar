@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -17,55 +19,84 @@ class CreateBookingView extends GetView<BookingController> {
         WorkerProfile(
           id: 'w1',
           userId: 'u1',
-          fullName: 'Alex Reynolds',
-          workerType: 'Master Electrician',
+          fullName: 'Rajesh Sharma',
+          workerType: 'Electrician',
+          profileImageUrl: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=400',
           hourlyRate: 45.0,
           rating: 4.9,
-          reviewsCount: 128,
+          reviewsCount: 124,
         );
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    controller.agreedRate.value = worker.hourlyRate;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Schedule Service'),
+        title: const Text(
+          'Schedule Service',
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        ),
+        elevation: 0,
+        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
           child: Form(
             key: controller.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Worker Snapshot Banner
+                // Worker Snapshot Banner Card
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.surfaceDark : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                      color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                      width: 1.2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
+                        color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
+                        blurRadius: 14,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: Row(
                     children: [
                       Container(
-                        width: 50,
-                        height: 50,
+                        width: 54,
+                        height: 54,
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.cardDark : AppColors.primarySoft,
                           shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.3),
+                            width: 2,
+                          ),
                         ),
-                        child: const Center(
-                          child: Icon(Icons.engineering_rounded, color: AppColors.primary, size: 28),
+                        child: ClipOval(
+                          child: worker.profileImageUrl != null && worker.profileImageUrl!.isNotEmpty
+                              ? CachedNetworkImage(
+                                  imageUrl: worker.profileImageUrl!,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    color: AppColors.primarySoft,
+                                    child: const Icon(Icons.person, color: AppColors.primary),
+                                  ),
+                                  errorWidget: (context, url, error) => Container(
+                                    color: AppColors.primarySoft,
+                                    child: const Icon(Icons.person, color: AppColors.primary),
+                                  ),
+                                )
+                              : Container(
+                                  color: AppColors.primarySoft,
+                                  child: const Icon(Icons.person, color: AppColors.primary),
+                                ),
                         ),
                       ),
                       const SizedBox(width: 14),
@@ -73,70 +104,147 @@ class CreateBookingView extends GetView<BookingController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              worker.fullName,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    worker.fullName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 16.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172A),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Icon(Icons.verified, size: 15, color: AppColors.primary),
+                              ],
                             ),
                             const SizedBox(height: 2),
-                            Text(
-                              worker.workerType,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  worker.workerType,
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Text('•', style: TextStyle(color: Color(0xFF94A3B8))),
+                                const SizedBox(width: 6),
+                                const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF59E0B)),
+                                const SizedBox(width: 2),
+                                Text(
+                                  worker.rating.toStringAsFixed(1),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark ? Colors.white70 : const Color(0xFF334155),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                      Text(
-                        '\$${worker.hourlyRate.toInt()}/hr',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.primary,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '\$${worker.hourlyRate.toInt()}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.primary,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          Text(
+                            '/hr',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ).animate().fadeIn(duration: 300.ms),
+                ).animate().fadeIn(duration: 250.ms),
 
-                const SizedBox(height: 24),
-                // Service Type
+                const SizedBox(height: 22),
+
+                // Section: Service Task
                 Text(
                   'Selected Service Task',
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E293B),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Obx(
                   () => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.surfaceDark : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(18),
                       border: Border.all(
-                        color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                        color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                        width: 1.2,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: controller.selectedServiceName.value,
                         isExpanded: true,
-                        dropdownColor: isDark ? AppColors.surfaceDark : Colors.white,
+                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.primary),
+                        dropdownColor: isDark ? const Color(0xFF1E293B) : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
                         items: [
                           'General Maintenance & Diagnostics',
                           'Emergency Repair',
                           'Installation & Replacement',
                           'Inspection & Safety Check',
-                        ].map((s) => DropdownMenuItem(value: s, child: Text(s, style: const TextStyle(fontSize: 14)))).toList(),
+                        ].map((s) {
+                          return DropdownMenuItem(
+                            value: s,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.build_circle_outlined, size: 18, color: AppColors.primary),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    s,
+                                    style: TextStyle(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
                         onChanged: (val) {
-                          if (val != null) controller.selectedServiceName.value = val;
+                          if (val != null) {
+                            HapticFeedback.selectionClick();
+                            controller.selectedServiceName.value = val;
+                          }
                         },
                       ),
                     ),
@@ -144,18 +252,28 @@ class CreateBookingView extends GetView<BookingController> {
                 ),
 
                 const SizedBox(height: 20),
+
                 // Date & Time Selectors
                 Row(
                   children: [
+                    // Date Field
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Date', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+                          Text(
+                            'Date',
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E293B),
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           Obx(
                             () => InkWell(
                               onTap: () async {
+                                HapticFeedback.lightImpact();
                                 final picked = await showDatePicker(
                                   context: context,
                                   initialDate: controller.selectedDate.value,
@@ -164,23 +282,30 @@ class CreateBookingView extends GetView<BookingController> {
                                 );
                                 if (picked != null) controller.selectedDate.value = picked;
                               },
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(18),
                               child: Container(
-                                padding: const EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
                                   color: isDark ? AppColors.surfaceDark : Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(18),
                                   border: Border.all(
-                                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                                    width: 1.2,
                                   ),
                                 ),
                                 child: Row(
                                   children: [
                                     const Icon(Icons.calendar_month_rounded, color: AppColors.primary, size: 20),
                                     const SizedBox(width: 8),
-                                    Text(
-                                      DateFormat('MMM dd, yyyy').format(controller.selectedDate.value),
-                                      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600),
+                                    Expanded(
+                                      child: Text(
+                                        DateFormat('MMM dd, yyyy').format(controller.selectedDate.value),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -191,38 +316,54 @@ class CreateBookingView extends GetView<BookingController> {
                       ),
                     ),
                     const SizedBox(width: 12),
+                    // Time Field
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Time', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+                          Text(
+                            'Time',
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E293B),
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           Obx(
                             () => InkWell(
                               onTap: () async {
+                                HapticFeedback.lightImpact();
                                 final picked = await showTimePicker(
                                   context: context,
                                   initialTime: controller.selectedTime.value,
                                 );
                                 if (picked != null) controller.selectedTime.value = picked;
                               },
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(18),
                               child: Container(
-                                padding: const EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
                                   color: isDark ? AppColors.surfaceDark : Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(18),
                                   border: Border.all(
-                                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                                    width: 1.2,
                                   ),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.schedule_rounded, color: AppColors.primary, size: 20),
+                                    const Icon(Icons.schedule_rounded, color: AppColors.secondary, size: 20),
                                     const SizedBox(width: 8),
-                                    Text(
-                                      controller.selectedTime.value.format(context),
-                                      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600),
+                                    Expanded(
+                                      child: Text(
+                                        controller.selectedTime.value.format(context),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -236,37 +377,74 @@ class CreateBookingView extends GetView<BookingController> {
                 ),
 
                 const SizedBox(height: 20),
+
                 // Service Location
                 CustomTextField(
                   controller: controller.addressController,
                   label: 'Service Location Address',
-                  hint: '123 Market St, Suite 400',
+                  hint: 'Enter your apartment, street, or villa...',
                   prefixIcon: Icons.location_on_outlined,
                   validator: (val) {
-                    if (val == null || val.trim().isEmpty) return 'Address is required';
+                    if (val == null || val.trim().isEmpty) return 'Please enter your address';
                     return null;
                   },
                 ),
 
                 const SizedBox(height: 16),
+
                 // Work Notes
                 CustomTextField(
                   controller: controller.notesController,
                   label: 'Job Notes / Problem Details',
-                  hint: 'Describe what needs to be fixed or installed...',
+                  hint: 'Describe what needs to be repaired or installed...',
                   maxLines: 3,
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
+
+                // Trust / Guarantee Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF10B981).withValues(alpha: isDark ? 0.15 : 0.08),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.shield_outlined, size: 18, color: Color(0xFF10B981)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'No advance payment required. Pay only after job completion.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF10B981),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 26),
+
                 // Submit Button
                 Obx(
                   () => CustomButton(
                     text: 'Confirm & Dispatch Request',
+                    icon: Icons.bolt_rounded,
                     isLoading: controller.isLoading.value,
-                    onPressed: () => controller.submitBooking(worker),
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      controller.submitBooking(worker);
+                    },
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
               ],
             ),
           ),

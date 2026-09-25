@@ -9,6 +9,7 @@ class BookingRemoteDataSource {
 
   Future<Booking> createBooking({
     required String workerId,
+    String? serviceId,
     required String serviceName,
     required DateTime scheduledDate,
     required String address,
@@ -18,12 +19,17 @@ class BookingRemoteDataSource {
     final response = await apiClient.post(
       ApiConstants.bookings,
       data: {
-        'workerId': workerId,
-        'serviceName': serviceName,
-        'scheduledDate': scheduledDate.toIso8601String(),
-        'address': address,
-        'notes': notes,
-        'agreedRate': agreedRate,
+        'workerProfileId': workerId,
+        'serviceId': serviceId,
+        'scheduledStartUtc': scheduledDate.toIso8601String(),
+        'scheduledEndUtc': scheduledDate.add(const Duration(hours: 2)).toIso8601String(),
+        'addressLine': address,
+        'city': 'Dubai',
+        'state': 'Dubai',
+        'country': 'United Arab Emirates',
+        'latitude': 25.0772,
+        'longitude': 55.1378,
+        'notes': notes ?? 'Service requested via Kamkar App',
       },
     );
     return Booking.fromJson(response as Map<String, dynamic>);
@@ -31,11 +37,15 @@ class BookingRemoteDataSource {
 
   Future<List<Booking>> getMyBookings({String? status}) async {
     final response = await apiClient.get(
-      ApiConstants.myBookings,
+      ApiConstants.bookings,
       queryParameters: status != null ? {'status': status} : null,
     );
     if (response is List) {
       return response.map((e) => Booking.fromJson(e as Map<String, dynamic>)).toList();
+    } else if (response is Map<String, dynamic> && response['items'] is List) {
+      return (response['items'] as List)
+          .map((e) => Booking.fromJson(e as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
@@ -45,10 +55,38 @@ class BookingRemoteDataSource {
     return Booking.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<void> updateBookingStatus(String bookingId, String status) async {
-    await apiClient.put(
-      '${ApiConstants.bookingStatus}/$bookingId/status',
-      data: {'status': status},
+  Future<void> acceptBooking(String bookingId, {String? reason}) async {
+    await apiClient.post(
+      '${ApiConstants.bookings}/$bookingId/accept',
+      data: {'reason': reason ?? 'Accepted by craftsman'},
+    );
+  }
+
+  Future<void> rejectBooking(String bookingId, {String? reason}) async {
+    await apiClient.post(
+      '${ApiConstants.bookings}/$bookingId/reject',
+      data: {'reason': reason ?? 'Declined by craftsman'},
+    );
+  }
+
+  Future<void> confirmBooking(String bookingId, {String? reason}) async {
+    await apiClient.post(
+      '${ApiConstants.bookings}/$bookingId/confirm',
+      data: {'reason': reason ?? 'Confirmed by customer'},
+    );
+  }
+
+  Future<void> completeBooking(String bookingId, {String? reason}) async {
+    await apiClient.post(
+      '${ApiConstants.bookings}/$bookingId/complete',
+      data: {'reason': reason ?? 'Work completed successfully'},
+    );
+  }
+
+  Future<void> cancelBooking(String bookingId, {String? reason}) async {
+    await apiClient.post(
+      '${ApiConstants.bookings}/$bookingId/cancel',
+      data: {'reason': reason ?? 'Cancelled by user'},
     );
   }
 }
